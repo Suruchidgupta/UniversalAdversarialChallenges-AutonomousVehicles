@@ -10,10 +10,10 @@ class YoloObjectDetector(object):
         """
         Constructor for the class loads the weights for the models and reads the output classnames
         """
-        self.model = cv2.dnn.readNet('../raw_models/yolo_model/yolov3.weights', '../raw_models/yolo_model/yolov3.cfg')
+        self.model = cv2.dnn.readNet('../models/yolo_model/yolov3.weights', '../models/yolo_model/yolov3.cfg')
         self.layer_names = self.model.getLayerNames()
         self.output_layers = [self.layer_names[i[0] - 1] for i in self.model.getUnconnectedOutLayers()]
-        self.classes = self.readClassNames('../raw_models/yolo_model/coco.names')
+        self.classes = self.readClassNames('../models/yolo_model/coco.names')
 
     def readClassNames(self, classFile):
         """

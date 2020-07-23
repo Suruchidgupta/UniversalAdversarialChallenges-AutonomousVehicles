@@ -1,10 +1,10 @@
 import numpy as np
 from PIL import Image
 import tensorflow as tf
-import utils.ops as utils_ops
 
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
+from object_detection.utils import ops as utils_ops
 
 class FrcnnObjectDetector(object):
     """
@@ -16,8 +16,8 @@ class FrcnnObjectDetector(object):
         """
         Constructor for the class to load the trained model
         """
-        self.model = tf.keras.models.load_model('../raw_models/frcnn_model/saved_model')
-        self.PATH_TO_LABELS = '../raw_models/models/research/object_detection/data/mscoco_label_map.pbtxt'
+        self.model = tf.keras.models.load_model('../models/frcnn_model/saved_model')
+        self.PATH_TO_LABELS = '../models/models/research/object_detection/data/mscoco_label_map.pbtxt'
         self.category_index = label_map_util.create_category_index_from_labelmap(self.PATH_TO_LABELS, use_display_name=True)
         print(self.model.signatures['serving_default'].inputs)
 
