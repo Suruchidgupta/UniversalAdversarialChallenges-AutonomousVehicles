@@ -1,3 +1,4 @@
 /raw_models/yolo_model/yolov3.weights
 /results/blank_model/
 /raw_models/frcnn_model/checkpoint/ckpt-0.data-00000-of-00001
+/raw_models/frcnn_model/saved_model/variables/variables.data-00000-of-00001
