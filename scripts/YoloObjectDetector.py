@@ -73,8 +73,8 @@ class YoloObjectDetector(object):
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
 
-                # Considering the classification threshold as 0.8
-                if confidence > 0.8:
+                # Considering the classification threshold as 0.5
+                if confidence > 0.5:
                     # Calculating coordinates for bounding box
                     box = detection[:4] * np.array([w, h, w, h])
                     (centerX, centerY, width, height) = box.astype("int")
@@ -90,9 +90,10 @@ class YoloObjectDetector(object):
             if i in indexes:
                 x, y, w, h = boxes[i]
                 label = str(self.classes[class_ids[i]])
+                label = label+": "+str(round(confidences[i]*100, 2))
 
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 3)
-                cv2.putText(frame, label, (x+2, y+h+20), font, 1, color, 2)
+                cv2.putText(frame, label, (x+2, y-5), font, 0.5, color, 2)
 
         # Saving the output image in the results folder
         path = name.replace('data/', 'results/yolo_model/')

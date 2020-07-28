@@ -35,7 +35,7 @@ class DirectoryReader(object):
 
         """
         # Reading all the folders in data directory
-        dir_names = [x[0] for x in os.walk("../data")]
+        dir_names = [x[0] for x in os.walk("../data")]  # TODO ['', '../data/New']
         filepath_dict = defaultdict()
 
         # Adding the filepath in each folder as an array
