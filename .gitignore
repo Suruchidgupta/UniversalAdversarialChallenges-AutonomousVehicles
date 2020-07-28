@@ -3,3 +3,5 @@
 /models/frcnn_model/checkpoint/ckpt-0.data-00000-of-00001
 /models/frcnn_model/saved_model/variables/variables.data-00000-of-00001
 /data/New/
+/results/frcnn_model/New/
+/results/yolo_model/New/
