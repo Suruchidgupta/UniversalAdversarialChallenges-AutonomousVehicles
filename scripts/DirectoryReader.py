@@ -44,3 +44,5 @@ class DirectoryReader(object):
             filepath_dict[x] = filepaths
 
         return filepath_dict
+
+        return filepath_dict
