@@ -38,11 +38,11 @@ class DirectoryReader(object):
         dir_names = [x[0] for x in os.walk("../data")]  # TODO ['', '../data/New']
         filepath_dict = defaultdict()
 
-            # Adding the filepath in each folder as an array
-            #for x in dir_names[1:]:
-        filepaths = glob.glob('../data/Art-in-surrounding and Murals/3LB65.jpg')   # TODO glob.glob(x + "/*.*")
-        x = '../data/Art-in-surrounding and Murals/'
-        filepath_dict[x] = filepaths
-        print(filepaths)
+        # Adding the filepath in each folder as an array
+        for x in dir_names[1:]:
+            filepaths = glob.glob(x + "/*.*")
+            filepath_dict[x] = filepaths
+
+        return filepath_dict
 
         return filepath_dict
