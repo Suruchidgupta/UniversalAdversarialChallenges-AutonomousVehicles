@@ -44,8 +44,8 @@ class DirectoryReader(object):
             filepath_dict[x] = filepaths
 
         # Testing code
-        # filepaths = glob.glob('../data/Art-in-surrounding and Murals/SYGLH.jpg')
-        # x = '../data/Art-in-surrounding and Murals/'
+        # filepaths = glob.glob('../data/Vehicle Art and Textures/OWMF6.jpg')
+        # x = '../data/Vehicle Art and Textures/'
         # filepath_dict[x] = filepaths
         # print(filepaths)
 
