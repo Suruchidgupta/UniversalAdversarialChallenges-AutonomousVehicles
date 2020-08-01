@@ -43,6 +43,10 @@ class DirectoryReader(object):
             filepaths = glob.glob(x + "/*.*")
             filepath_dict[x] = filepaths
 
-        return filepath_dict
+        # Testing code
+        # filepaths = glob.glob('../data/Art-in-surrounding and Murals/SYGLH.jpg')
+        # x = '../data/Art-in-surrounding and Murals/'
+        # filepath_dict[x] = filepaths
+        # print(filepaths)
 
         return filepath_dict
