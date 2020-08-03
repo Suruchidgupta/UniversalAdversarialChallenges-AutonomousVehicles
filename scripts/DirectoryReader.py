@@ -40,11 +40,14 @@ class DirectoryReader(object):
 
         # Adding the filepath in each folder as an array
         for x in dir_names[1:]:
-            filepaths = glob.glob(x + "/*.*")
-            filepath_dict[x] = filepaths
+            if not x.__contains__('Advanced Scenarios'):
+                filepaths = glob.glob(x + "/*.*")
+                filepath_dict[x] = filepaths
+            else:
+                print('skip')
 
         # Testing code
-        # filepaths = glob.glob('../data/Vehicle Art and Textures/OWMF6.jpg')
+        # filepaths = glob.glob('../data/Vehicle Art and Textures/OR9FU.jpg')
         # x = '../data/Vehicle Art and Textures/'
         # filepath_dict[x] = filepaths
         # print(filepaths)
