@@ -1,3 +1,4 @@
+import pathlib
 import numpy as np
 from PIL import Image
 import tensorflow as tf
@@ -16,10 +17,14 @@ class FrcnnObjectDetector(object):
         """
         Constructor for the class to load the trained model
         """
-        self.model = tf.keras.models.load_model('../models/frcnn_model/saved_model')
+        # patching few paths (tf1 into `utils.ops`, location of gfile)
+        utils_ops.tf = tf.compat.v1
+        tf.gfile = tf.io.gfile
+
+        self.model = tf.saved_model.load('../models/frcnn_model/saved_model')
         self.PATH_TO_LABELS = '../models/models/research/object_detection/data/mscoco_label_map.pbtxt'
         self.category_index = label_map_util.create_category_index_from_labelmap(self.PATH_TO_LABELS, use_display_name=True)
-        print(self.model.signatures['serving_default'].inputs)
+        # print(self.model.signatures['serving_default'].inputs)
 
     def model_run(self, image_path):
         """
