@@ -73,8 +73,8 @@ class YoloObjectDetector(object):
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
 
-                # Considering the classification threshold as 0.5
-                if confidence > 0.5:
+                # Considering the classification threshold as 0.7
+                if confidence > 0.7:
                     # Calculating coordinates for bounding box
                     box = detection[:4] * np.array([w, h, w, h])
                     (centerX, centerY, width, height) = box.astype("int")

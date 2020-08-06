@@ -48,7 +48,8 @@ class FrcnnObjectDetector(object):
             self.category_index,
             instance_masks=output_dict.get('detection_masks_reframed', None),
             use_normalized_coordinates=True,
-            line_thickness=8)
+            line_thickness=8,
+            min_score_thresh=.7)    # Setting classification threshold as 0.7
 
         # Saving the output in the results folder
         result = Image.fromarray(image_np)
