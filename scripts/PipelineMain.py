@@ -18,4 +18,7 @@ if __name__ == "__main__":
     for folder, file_path in filepath_dict.items():
         print('Processing folder - FRCNN '+folder)
         for path in file_path:
-            FOD.model_run(path)
+            try:
+                FOD.model_run(path)
+            except:
+                print('Execution failed for ', path)
