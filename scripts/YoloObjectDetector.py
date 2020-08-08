@@ -92,7 +92,7 @@ class YoloObjectDetector(object):
                 label = str(self.classes[class_ids[i]])
                 label = label+": "+str(round(confidences[i]*100, 2))
 
-                # print(self.classes[class_ids[i]])
+                # print(self.classes[class_ids[i]], confidences[i])
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 3)
                 cv2.putText(frame, label, (x+2, y-5), font, 0.5, color, 2)
 

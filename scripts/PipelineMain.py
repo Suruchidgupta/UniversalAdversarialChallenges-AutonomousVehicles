@@ -11,7 +11,11 @@ if __name__ == "__main__":
     for folder, file_path in filepath_dict.items():
         print('Processing folder - YOLO '+folder)
         images = DR.read_images(file_path)
-        YOD.model_run(images)
+        try:
+            YOD.model_run(images)
+        except:
+            print('Execution failed - YOLO : ', path)
+
 
     # Processing all the images through Faster R-CNN model
     FOD = FrcnnObjectDetector()
@@ -21,4 +25,4 @@ if __name__ == "__main__":
             try:
                 FOD.model_run(path)
             except:
-                print('Execution failed for ', path)
+                print('Execution failed - FRCNN : ', path)
