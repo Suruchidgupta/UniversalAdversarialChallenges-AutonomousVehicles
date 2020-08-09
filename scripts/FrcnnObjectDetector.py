@@ -51,6 +51,15 @@ class FrcnnObjectDetector(object):
             line_thickness=8,
             min_score_thresh=.7)    # Setting classification threshold as 0.7
 
+        # objects = []
+        # scores = output_dict['detection_scores']
+        # for index, value in enumerate(output_dict['detection_classes']):
+        #     object_dict = {}
+        #     if scores[index] > 0.7:
+        #         object_dict[(self.category_index.get(value)).get('name').encode('utf8')] = scores[index]
+        #         objects.append(object_dict)
+        # print(objects)
+
         # Saving the output in the results folder
         result = Image.fromarray(image_np)
         result_path = image_path.replace('data/', 'results/frcnn_model/')
