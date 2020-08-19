@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from PIL import Image
 
 class YoloObjectDetector(object):
     """
@@ -29,7 +30,7 @@ class YoloObjectDetector(object):
 
         return classes
 
-    def model_run(self, images):
+    def model_run(self, image_path, results_array):
         """
         This method call the ObjectDetection for each of the image
         Args:
@@ -38,10 +39,10 @@ class YoloObjectDetector(object):
         Returns: None
 
         """
-        for name, image in images:
-            self.process_frame(name, image)
+        image = np.array(Image.open(image_path))
+        self.process_frame(image_path, image, results_array)
 
-    def process_frame(self, name, frame):
+    def process_frame(self, name, frame, results_array):
         """
         The method processes each frame(image) and saves the images with bounding boxes in the /results folder
         Args:
@@ -92,7 +93,8 @@ class YoloObjectDetector(object):
                 label = str(self.classes[class_ids[i]])
                 label = label+": "+str(round(confidences[i]*100, 2))
 
-                # print(self.classes[class_ids[i]], confidences[i])
+                # Collating the results into a dataframe
+                results_array.loc[name, self.classes[class_ids[i]]] = results_array.loc[name, self.classes[class_ids[i]]] + 1
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 3)
                 cv2.putText(frame, label, (x+2, y-5), font, 0.5, color, 2)
 

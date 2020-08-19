@@ -1,4 +1,3 @@
-import pathlib
 import numpy as np
 from PIL import Image
 import tensorflow as tf
@@ -24,9 +23,18 @@ class FrcnnObjectDetector(object):
         self.model = tf.saved_model.load('../models/frcnn_model/saved_model')
         self.PATH_TO_LABELS = '../models/models/research/object_detection/data/mscoco_label_map.pbtxt'
         self.category_index = label_map_util.create_category_index_from_labelmap(self.PATH_TO_LABELS, use_display_name=True)
-        # print(self.model.signatures['serving_default'].inputs)
 
-    def model_run(self, image_path):
+        # Dictionary to map the unaligned coco class names correctly
+        self.switcher = {
+            'motorcycle': 'motorbike',
+            'potted plant': 'pottedplant',
+            'airplane': 'aeroplane',
+            'tv': 'tvmonitor',
+            'couch': 'sofa',
+            'dining table': 'diningtable'
+        }
+
+    def model_run(self, image_path, results_array):
         """
         This method reads the image from the image_path, passes it for Object Detection and saves the output
         Args:
@@ -51,14 +59,12 @@ class FrcnnObjectDetector(object):
             line_thickness=8,
             min_score_thresh=.7)    # Setting classification threshold as 0.7
 
-        # objects = []
-        # scores = output_dict['detection_scores']
-        # for index, value in enumerate(output_dict['detection_classes']):
-        #     object_dict = {}
-        #     if scores[index] > 0.7:
-        #         object_dict[(self.category_index.get(value)).get('name').encode('utf8')] = scores[index]
-        #         objects.append(object_dict)
-        # print(objects)
+        # Collating the results into a dataframe
+        scores = output_dict['detection_scores']
+        for index, value in enumerate(output_dict['detection_classes']):
+            if scores[index] > 0.7:
+                classes = (self.category_index.get(value)).get('name')
+                results_array.loc[image_path, self.switcher.get(classes, classes)] = results_array.loc[image_path, self.switcher.get(classes, classes)] + 1
 
         # Saving the output in the results folder
         result = Image.fromarray(image_np)

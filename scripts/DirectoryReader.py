@@ -1,6 +1,5 @@
 import os
 import glob
-import cv2 as cv
 from collections import defaultdict
 
 
@@ -8,24 +7,6 @@ class DirectoryReader(object):
     """
     This class handles the file/directory reading operation and returns an list of images or filepaths as required
     """
-
-    @staticmethod
-    def read_images(file_paths):
-        """
-        This method reads the list of filepaths and returns the image files packed with filepath
-        Args:
-            file_paths: list of filepaths
-
-        Returns: list of filepaths and corresponding images
-
-        """
-        images = list()
-        # Read all filepaths and add to list of images
-        for name in file_paths:
-            image = cv.imread(name)
-            images.append((name, image))
-
-        return images
 
     def get_all_filepaths(self):
         """
@@ -35,7 +16,8 @@ class DirectoryReader(object):
 
         """
         # Reading all the folders in data directory
-        dir_names = [x[0] for x in os.walk("../data")]  # TODO ['', '../data/New']
+        # TODO ['', '../data/On-road Scenario']
+        dir_names = [x[0] for x in os.walk("../data")]
         filepath_dict = defaultdict()
 
         # Adding the filepath in each folder as an array
@@ -45,8 +27,8 @@ class DirectoryReader(object):
                 filepath_dict[x] = filepaths
 
         # Testing code
-        # filepaths = glob.glob('../data/Parking spaces/LAGCC.jpg')
-        # x = '../data/Parking spaces/'
+        # filepaths = glob.glob('../data/Art-in-surrounding and Murals/O4N3B.jpg')
+        # x = '../data/Art-in-surrounding and Murals/'
         # filepath_dict[x] = filepaths
         # print(filepaths)
 
