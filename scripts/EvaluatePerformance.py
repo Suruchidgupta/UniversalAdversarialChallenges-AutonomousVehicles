@@ -20,11 +20,9 @@ class EvaluatePerformance(object):
         """
         scores_dict = defaultdict()
         true_positive = true_negative = false_positive = false_negative = 0
-        # Setting index for Ground truth and removing all 0 columns
-        expected.set_index('Image', inplace=True)
 
         for index, pred in predicted.iterrows():
-            actual = expected.loc[self.alter_index(index)]
+            actual = expected.loc[self.ground_truth_index(index)]
 
             # Collating columns with 0 values
             act_zero = actual[actual == 0]
@@ -35,27 +33,25 @@ class EvaluatePerformance(object):
             actual = actual.drop(common)
             pred = pred.drop(common)
 
-            try:
-                # Computing confusion matrix for each label
-                for label, pred_value in pred.items():
-                    act_value = actual[label]
+            # Computing confusion matrix for each label
+            for label, pred_value in pred.items():
+                act_value = actual[label]
 
-                    if pred_value < act_value:
-                        # Detected less objects, missed objects contribute to FN
-                        false_negative = false_negative + (act_value - pred_value)
-                        true_positive = true_positive + pred_value
-                    elif pred_value > act_value:
-                        # Detected extra objects, extra objects contribute to FP
-                        false_positive = false_positive + (pred_value - act_value)
-                        true_positive = true_positive + act_value
-                    elif pred_value == act_value and pred_value != 0:
-                        # All object correctly classified
-                        true_positive = true_positive + pred_value
-                    else:
-                        # no object in frame to be detected
-                        true_negative = true_negative + 1
-            except:
-                print(pred, actual, pred_value, act_value, index)
+                if pred_value < act_value:
+                    # Detected less objects, missed objects contribute to FN
+                    false_negative = false_negative + (act_value - pred_value)
+                    true_positive = true_positive + pred_value
+                elif pred_value > act_value:
+                    # Detected extra objects, extra objects contribute to FP
+                    false_positive = false_positive + (pred_value - act_value)
+                    true_positive = true_positive + act_value
+                elif pred_value == act_value and pred_value != 0:
+                    # All object correctly classified
+                    true_positive = true_positive + pred_value
+                else:
+                    # no object in frame to be detected
+                    true_negative = true_negative + 1
+
         # Adding the values for confusion matrix in the dictionary
         scores_dict['true_positive'] = true_positive
         scores_dict['true_negative'] = true_negative
@@ -74,7 +70,7 @@ class EvaluatePerformance(object):
 
         return scores_dict
 
-    def alter_index(self, index):
+    def ground_truth_index(self, index):
         """
         The index for ground truth and predictions is inconsistent.
         This method returns suitable index for ground truth.

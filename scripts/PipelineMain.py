@@ -27,9 +27,12 @@ if __name__ == "__main__":
 
     # Reading the ground truth data as pandas dataframe
     excel_df = pd.ExcelFile('../GroundTruth.xlsx')
-    # Creating a dict for all the sheets and filling Nan with 0
+
+    # Creating a dict for all the sheets, filling Nan with 0 and setting index as Image name
     ground_truth = {'../data/' + sheet_name: excel_df.parse(sheet_name).fillna(0)
                     for sheet_name in excel_df.sheet_names}
+    for name, values in ground_truth.items():
+        values.set_index('Image', inplace=True)
 
     # For evaluating performance for all scenarios
     eval = EvaluatePerformance()
@@ -58,6 +61,7 @@ if __name__ == "__main__":
                 print('Execution failed - YOLO : ', path)
 
         # Computing the evaluation metrics for the predictions
+        print('Results YOLO : ', folder)
         results_dict['YOLO'][folder] = eval.compute_scores(ground_truth[folder], results_dict['YOLO'][folder])
         print(results_dict['YOLO'][folder])
 
@@ -78,5 +82,6 @@ if __name__ == "__main__":
                 print('Execution failed - FRCNN : ', path)
 
         # Computing the evaluation metrics for the predictions
+        print('Results FRCNN: ', folder)
         results_dict['FRCNN'][folder] = eval.compute_scores(ground_truth[folder], results_dict['FRCNN'][folder])
         print(results_dict['FRCNN'][folder])
