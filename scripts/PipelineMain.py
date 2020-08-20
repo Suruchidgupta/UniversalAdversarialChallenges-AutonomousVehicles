@@ -7,13 +7,7 @@ from scripts.EvaluatePerformance import EvaluatePerformance
 
 if __name__ == "__main__":
     # Adding the results dict and coco class names to collate the results
-    results_dict = {'YOLO': {'Vehicle Art and Textures': 'yolo_vat_results', 'Parking spaces': 'yolo_ps_results',
-                             'Street Signs': 'yolo_ss_results', 'Art-in-surrounding and Murals': 'yolo_aism_results',
-                             'On-road Scenario': 'yolo_ors_results'},
-                    'FRCNN': {'Vehicle Art and Textures': 'frcnn_vat_results', 'Parking spaces': 'frcnn_ps_results',
-                              'Street Signs': 'frcnn_ss_results', 'Art-in-surrounding and Murals': 'frcnn_aism_results',
-                              'On-road Scenario': 'frcnn_ors_results'}}
-
+    results_dict = {'YOLO': {}, 'FRCNN': {}}
     coco_classes = ['person', 'bicycle', 'car', 'motorbike', 'aeroplane', 'bus', 'train', 'truck', 'boat',
                     'traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
                     'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag',
@@ -34,20 +28,19 @@ if __name__ == "__main__":
     for name, values in ground_truth.items():
         values.set_index('Image', inplace=True)
 
-    # For evaluating performance for all scenarios
-    eval = EvaluatePerformance()
-
-    # Reading all the files from /data directory
+    # Instantiating DirectoryReader and reading all the files from /data directory
     DR = DirectoryReader()
+
     filepath_dict = DR.get_all_filepaths()
 
-    # Creating dict to store all scores
+    # Creating object for EvaluatePerformance and dict to store all scores
+    eval_perf = EvaluatePerformance()
     scores = defaultdict()
 
     # Processing all the images through YOLO model
     YOD = YoloObjectDetector()
     for folder, file_path in filepath_dict.items():
-        print('Processing folder - YOLO '+folder)
+        print('Processing folder - YOLO ' + folder)
 
         # Creating dataframe to store results for Object Detection
         results_dict['YOLO'][folder] = pd.DataFrame(index=file_path, columns=coco_classes)
@@ -61,14 +54,16 @@ if __name__ == "__main__":
                 print('Execution failed - YOLO : ', path)
 
         # Computing the evaluation metrics for the predictions
-        print('Results YOLO : ', folder)
-        results_dict['YOLO'][folder] = eval.compute_scores(ground_truth[folder], results_dict['YOLO'][folder])
-        print(results_dict['YOLO'][folder])
+        results_dict['YOLO'][folder] = eval_perf.compute_scores(ground_truth[folder], results_dict['YOLO'][folder])
+
+    # Printing evaluation metrics for YOLO
+    print('YOLO model Results: ')
+    eval_perf.publish_results(results_dict['YOLO'])
 
     # Processing all the images through Faster R-CNN model
     FOD = FrcnnObjectDetector()
     for folder, file_path in filepath_dict.items():
-        print('Processing folder - FRCNN '+folder)
+        print('Processing folder - FRCNN ' + folder)
 
         # Creating dataframe to store results for Object Detection
         results_dict['FRCNN'][folder] = pd.DataFrame(index=file_path, columns=coco_classes)
@@ -82,6 +77,8 @@ if __name__ == "__main__":
                 print('Execution failed - FRCNN : ', path)
 
         # Computing the evaluation metrics for the predictions
-        print('Results FRCNN: ', folder)
-        results_dict['FRCNN'][folder] = eval.compute_scores(ground_truth[folder], results_dict['FRCNN'][folder])
-        print(results_dict['FRCNN'][folder])
+        results_dict['FRCNN'][folder] = eval_perf.compute_scores(ground_truth[folder], results_dict['FRCNN'][folder])
+
+    # Printing evaluation metrics for FRCNN
+    print('FRCNN model Results: ')
+    eval_perf.publish_results(results_dict['FRCNN'])

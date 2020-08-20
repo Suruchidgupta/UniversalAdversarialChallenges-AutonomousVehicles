@@ -6,6 +6,7 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 from object_detection.utils import ops as utils_ops
 
+
 class FrcnnObjectDetector(object):
     """
     This class handles loading and running Faster R-CNN model with class outputs from coco dataset
@@ -16,13 +17,16 @@ class FrcnnObjectDetector(object):
         """
         Constructor for the class to load the trained model
         """
+
         # patching few paths (tf1 into `utils.ops`, location of gfile)
         utils_ops.tf = tf.compat.v1
         tf.gfile = tf.io.gfile
 
+        # Loading the pre-trained model
         self.model = tf.saved_model.load('../models/frcnn_model/saved_model')
         self.PATH_TO_LABELS = '../models/models/research/object_detection/data/mscoco_label_map.pbtxt'
-        self.category_index = label_map_util.create_category_index_from_labelmap(self.PATH_TO_LABELS, use_display_name=True)
+        self.category_index = label_map_util.create_category_index_from_labelmap(self.PATH_TO_LABELS,
+                                                                                 use_display_name=True)
 
         # Dictionary to map the unaligned coco class names correctly
         self.switcher = {
@@ -37,12 +41,11 @@ class FrcnnObjectDetector(object):
     def model_run(self, image_path, results_array):
         """
         This method reads the image from the image_path, passes it for Object Detection and saves the output
-        Args:
-            image_path: file path for image to be processed
-
-        Returns: None
-
+        :param image_path: file path for image to be processed
+        :param results_array: dataframe to store the individual results
+        :return: None
         """
+
         # Reading the image and calling Object Detection
         image_np = np.array(Image.open(image_path))
         output_dict = self.process_frame(image_np)
@@ -57,14 +60,16 @@ class FrcnnObjectDetector(object):
             instance_masks=output_dict.get('detection_masks_reframed', None),
             use_normalized_coordinates=True,
             line_thickness=8,
-            min_score_thresh=.7)    # Setting classification threshold as 0.7
+            min_score_thresh=.7)  # Setting classification threshold as 0.7
 
         # Collating the results into a dataframe
         scores = output_dict['detection_scores']
         for index, value in enumerate(output_dict['detection_classes']):
             if scores[index] > 0.7:
                 classes = (self.category_index.get(value)).get('name')
-                results_array.loc[image_path, self.switcher.get(classes, classes)] = results_array.loc[image_path, self.switcher.get(classes, classes)] + 1
+                results_array.loc[image_path, self.switcher.get(classes, classes)] = results_array.loc[
+                                                                                         image_path, self.switcher.get(
+                                                                                             classes, classes)] + 1
 
         # Saving the output in the results folder
         result = Image.fromarray(image_np)
@@ -75,11 +80,8 @@ class FrcnnObjectDetector(object):
         """
         This method is taken from the colab tutorials for tensorflow object_detection repo on git
         It takes np array of image as input, converts it in tensor, process and returns the output tensor
-        Args:
-            frame: np array of the input image
-
-        Returns: output tensor
-
+        :param frame: np array of the input image
+        :return: output tensor
         """
         image = np.asarray(frame)
 
