@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from PIL import Image
 
 
 class YoloObjectDetector(object):
@@ -36,7 +35,7 @@ class YoloObjectDetector(object):
         :param results_array: dataframe to store the individual results
         :return:
         """
-        image = np.array(Image.open(image_path))
+        image = cv2.imread(image_path)
         self.process_frame(image_path, image, results_array)
 
     def process_frame(self, name, frame, results_array):
